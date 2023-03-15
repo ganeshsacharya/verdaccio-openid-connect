@@ -1,31 +1,21 @@
-# path to a directory with all packages
 storage: /verdaccio/storage/data
-# path to a directory with plugins to include
 plugins: /verdaccio/plugins
 
 auth:
+  htpasswd:
+    file: ./htpasswd
   openid-connect:
     publicUrl: http://localhost:4873
-
-    ###
-    # when set redis storage (for sessions and tokens) will be used.
-    # see also: fs_session_store_path, fs_token_store_path.
     redisUri: redis
-
-    ###
-    # session files (persistent) storage path and token files (temporary for short-lived files) storage path: will be used if redisUri not set
-    #fsSessionStorePath: /tmp
-    #fsTokenStorePath: /tmp
-
-    issuer: https://keycloak/auth/realms/MyRealm/
-    clientId: verdaccio
-    clientSecret: '...'
+    # issuer: https://login.microsoftonline.com/e9a60b1d-b1a0-45c3-b518-3aa5bec6d54c/wsfed
+    issuer: https://login.microsoftonline.com/e9a60b1d-b1a0-45c3-b518-3aa5bec6d54c/v2.0/.well-known/openid-configuration
+    clientId: ...client_id-here
+    clientSecret: ...client_secret-here
     scope: 'openid profile email offline_access'
     usernameClaim: preferred_username
-
     # optional roles claim (id_token).
     # claim can be array or string (comma-separated)
-    rolesClaim: roles
+    # rolesClaim: roles
 
 web:
   title: Verdaccio
@@ -51,14 +41,14 @@ uplinks:
 packages:
   '@*/*':
     # scoped packages
-    access: $authenticated
+    access: $all
     publish: $authenticated
   '**':
-    access: $authenticated
+    access: $all
     publish: $authenticated
 
 middlewares:
   audit:
     enabled: true
 logs:
-  - {type: stdout, format: pretty, level: info}
+  - {type: stdout, format: pretty, level: debug}
